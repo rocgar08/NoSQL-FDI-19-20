@@ -1,0 +1,32 @@
+// Nombre 1:
+// Nombre 2:
+
+// INSTRUCCIONES:
+// arrancar el servidor desde un terminal (t1): mongod -dbpath datos
+// desde otro terminal (t2): 
+// mongoimport --drop --db=redes --collection=twitter --file=twitter.json
+// debe importar 5 documentos
+// Ahora en T2: mongo
+// Copiar DEBAJO de cada pregunta la consulta correspondientes 
+
+//1.- Nombre (_id) del usuario con cuenta verificada menor por orden alfabético
+
+//2.- Número de los usuarios que tienen clave de coordenadas (coord)
+
+
+//3.- Número de usuarios con país "sp"
+
+//4.- Número de usuarios con "cp" mayor que 27000 y menor de 29000
+ 
+//5.- Número de usuarios que tienen al menos un tweet con retweet (rt:1)
+ 
+//6.- Códigos postales (CP) que  son de tipo string o de tipo bool
+
+//7.- Lista de países distintos (pais)
+ 
+//8.- Número de países distintos
+
+//9.- Valores para los que sus coordenadas (coord) verifican que la latitud es menor que dos veces la longitud
+
+//10.- Número de usuarios que tiene algún tweet con retweet (rt:1) que no haya sido borrado (del:1)
+
