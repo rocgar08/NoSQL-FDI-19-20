@@ -1,0 +1,80 @@
+Nombre:Rocío García Núñez
+
+P1)
+use pruebas;
+drop table cliente;
+Create  table cliente
+    (
+        idCliente text,
+	idViajes int,
+	numDias int,
+	lugarPartida text,
+	lugarDestino text,
+	fechaPartida date,
+        Primary key(idCliente,fechaPartida)
+    ) with clustering order by (fechaPartida desc);
+
+
+drop table viajes;
+Create  table viajes
+    (
+        idViajes int,
+	idCliente text,
+	numDias int,
+	hitos map<text,text>,
+        Primary key(idViajes,idCliente)
+    ) with clustering order by (idCliente asc);
+
+P2)
+//Madrid-Paris
+insert into cliente(idCliente,idViajes,numDias,lugarPartida,lugarDestino,fechaPartida) 
+            values('Bertoldo',3,2,'Madrid','Paris','2019-05-02');
+
+//Madrid-Barcelona
+insert into cliente(idCliente,idViajes,numDias,lugarPartida,lugarDestino,fechaPartida) 
+            values('Herminia',3,2,'Barcelona','Paris','2019-05-02');
+//Madrid Tokyo
+insert into cliente(idCliente,idViajes,numDias,lugarPartida,lugarDestino,fechaPartida) 
+            values('Bertoldo',4,7,'Madrid','Tokyo','2019-06-01');
+
+//Viaje 1 Bertoldo
+insert into viajes(idViajes,idCliente,numDias,hitos) values(3,'Bertoldo',2,{'Versailles':'3-05 contacta agencia'});
+//Viaje 1 Herminia
+insert into viajes(idViajes,idCliente,numDias,hitos) values(3,'Herminia',2,{'Versailles':'3-05 contacta agencia'});
+//Viaje 2 Bertoldo
+insert into viajes(idViajes,idCliente,numDias,hitos) values(4,'Bertoldo',7,{'Transbordo':'Frankfurt,puerta C27'});
+
+P3)
+select lugarPartida,lugarDestino,fechaPartida,numDias from cliente where idCliente ='Bertoldo'order by fechaPartida desc;
+/**lugarpartida | lugardestino | fechapartida | numdias
+--------------+--------------+--------------+---------
+       Madrid |        Tokyo |   2019-06-01 |       7
+       Madrid |        Paris |   2019-05-02 |       2
+**/
+select idCliente, hitos, numDias from viajes where idViajes=3 order by idCliente asc;
+/**
+ idcliente | hitos                                   | numdias
+-----------+-----------------------------------------+---------
+  Bertoldo | {'Versailles': '3-05 contacta agencia'} |       2
+  Herminia | {'Versailles': '3-05 contacta agencia'} |       2
+**/
+P4)
+Update viajes
+Set hitos = hitos + {'regreso' : '2019-05-04'} where idCliente = 'Bertoldo' and idViajes = 3;
+//Comprobacion del update
+/**
+select hitos from viajes;
+hitos
+------------------------------------------------------------------
+                           {'Transbordo': 'Frankfurt,puerta C27'}
+ {'Versailles': '3-05 contacta agencia', 'regreso': '2019-05-04'}
+                          {'Versailles': '3-05 contacta agencia'}
+**/
+
+P5)
+select lugarPartida, lugarDestino, fechaPartida from cliente where idCliente='Bertoldo' and fechaPartida IN ('2019-06-01','2019-05-02','2020-01-01');
+/** lugarpartida | lugardestino | fechapartida
+--------------+--------------+--------------
+       Madrid |        Tokyo |   2019-06-01
+       Madrid |        Paris |   2019-05-02
+**/
