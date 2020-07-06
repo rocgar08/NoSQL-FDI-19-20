@@ -1,0 +1,44 @@
+//Rocío García Núñez
+//Respuestas 1 
+MATCH p =(:Sospechoso)-[:AMISTAD]->(:Victima) 
+RETURN p
+//Respuesta 2
+MATCH p =(a)-[:AMOR]->(b)-[:AMOR]->(a) 
+RETURN p
+//Respuesta 3
+MATCH p = (n:Sospechoso{nombre:"Aniceto"})set n+={ultimavez:datetime('2020-05-12T12:50:35.000+0100')}return n
+MATCH p = (n:Sospechoso{nombre:"Herminia"})set n+={ultimavez:datetime('2020-05-12T16:00:00.000+0100')}return n
+MATCH p = (n:Sospechoso{nombre:"Melibeo"})set n+={ultimavez:datetime('2020-05-11T09:00:00.000+0100')}return n
+MATCH p = (n:Sospechoso{nombre:"Calixta"})set n+={ultimavez:datetime('2020-05-12T14:00:00.000+0100')}return n
+//Respuesta 4
+MATCH p =(a:Sospechoso) 
+RETURN a.ultimavez  
+//Respuesta 5
+MATCH p =(a:Sospechoso) 
+RETURN a.nombre,a.ultimavez  
+ORDER BY a.ultimavez DESC
+//Respuesta 6
+MATCH p=(x)-[:AMOR *3..]->(x) 
+WHERE SINGLE(j in nodes(p) where 'Victima' in labels(j) ) 
+RETURN p
+//Repuesta 7 
+MATCH p=(x)-[i:AMISTAD *]->(x) 
+WHERE NONE(j in relationships(p) where i='AMOR') 
+RETURN p
+//Respuesta 8
+MATCH p =(a:Sospechoso)-[:AMOR]->(b:Victima) 
+WHERE NOT (b)-[:AMOR]->(a) 
+RETURN a.nombre
+//En este caso como solo existe una relación también valdria
+MATCH p =(a:Sospechoso)-[:AMOR]->(b:Victima) 
+RETURN a.nombre
+//Respuesta 9
+MATCH p = (x)-[:AMOR]->(y)-[:AMOR]->(:Victima) 
+RETURN x.nombre
+//Respuesta 10
+//https://www.tutorialspoint.com/neo4j/neo4j_unwind_clause.htm
+//https://neo4j.com/docs/cypher-manual/current/functions/list/?_ga=2.229934108.1002073894.1590252241-274186188.1589963562&_gac=1.229254824.1590322268.EAIaIQobChMI3IygibzM6QIVWfBRCh0cQArZEAAYASAAEgKHqfD_BwE#functions-reduce
+MATCH (a:Sospechoso) 
+WITH a ORDER BY a.edad ASC 
+WITH collect(a.mensaje) AS men
+RETURN  REDUCE(nemsg='',var in men|nemsg + var)
