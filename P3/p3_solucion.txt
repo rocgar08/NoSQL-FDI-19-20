@@ -1,0 +1,36 @@
+﻿Práctica 3 -  NoSQL - Solución
+Nombre 1: Rocío García Núñez
+Nombre 2:Cristina Manso de la Viuda
+Observaciones:
+
+
+Respuestas
+
+#1Consulta:
+db.webs.aggregate([{$group:{_id:"$navegador",num_sesiones:{$sum:1}}},{$sort:{'_id.num_sesiones':1}}])
+#2Consulta:
+db.webs.aggregate([{$group:{_id:"$nombre",num_sesiones:{$sum:1}}},{$match:{$max:num_sesiones}}])
+#3Consulta:
+db.webs.aggregate([{$unwind:'$pags'},{$group:{_id:"$nombre",num_sesiones:{$sum:1}}},{$match:{$segs:{$gt:100}}}])
+#4Consulta:
+
+#5Consulta:
+flitarra explorer agrupar año y flitaraaño
+#6Consulta:
+
+
+#7Consulta:
+
+
+#8Consulta:
+
+
+#9Consulta:
+
+
+#10Consulta:
+
+
+
+db.webs.aggregate([{$group:{_id:{$navegador:"Explorer",num_sesiones:{$sum:1}},{anho:{$year:'$fecha'}}}])
+
