@@ -1,0 +1,92 @@
+﻿Bases de datos NoSQL - práctica 4
+
+//Nombre1: Rocío García Núñez
+//Nombre2: Cristina MAnso
+//Nombre3:
+
+//Observaciones:
+
+//P1a Insert:
+
+db.lugares.insert({nombre:"María Zambrano", tipo:"biblioteca", pais:"España", 
+                   posicion: {type:"Point", coordinates:[-3.7354677,40.4492451]}})
+
+//P1b Indice:
+db.lugares.createIndex({posicion:"2dsphere"})
+
+//{
+//	"createdCollectionAutomatically" : false,
+//	"numIndexesBefore" : 1,
+//	"numIndexesAfter" : 2,
+//	"ok" : 1
+//}
+
+//P2 Consulta:
+db.lugares.find({'posicion':{$near:{$geometry:{type:'Point',coordinates:[-3.7251149,40.4381963]},$maxDistance:1500}}},{nombre:1,tipo:1,_id:0})
+//P3a Creación de índices:
+db.plano.createIndex({punto:1},"ipunto")
+
+//{
+//	"createdCollectionAutomatically" : false,
+//	"numIndexesBefore" : 1,
+//	"numIndexesAfter" : 2,
+//	"ok" : 1
+//}
+
+db.plano.createIndex({desc:1},"idesc")
+
+//{
+//	"createdCollectionAutomatically" : false,
+//	"numIndexesBefore" : 2,
+//	"numIndexesAfter" : 3,
+//	"ok" : 1
+//}
+
+//P3b Comentario sobre dif de tamaños:
+//Porque en desc es un string y punto es una matriz
+//"nindexes" : 3,
+//	"totalIndexSize" : 4112384,
+//	"indexSizes" : {
+//		"_id_" : 1138688,
+//		"ipunto" : 1564672,
+//		"idesc" : 1409024
+//	},
+
+//P4 Consulta:
+db.plano.find({"punto.0":{$gt:480}}).count()
+//P5a Índice (Sí/No):
+//Si no se tiene un indice en MOngo exite el id que lo toma como indice
+
+//P5b ¿Cuál? (si sí):
+//Sí el de ipunto 
+//P6 Consulta:
+db.plano.find({punto:{$geoWithin:{$polygon:[[0,0],[3,0],[3,3],[0,3]]}}})
+//P7 Creación de índice:
+ db.plano.createIndex({punto:"2d"})
+
+//P8a ¿Sé puede crear el índice?(Sí/No):
+//No
+//{
+//	"ok" : 0,
+//	"errmsg" : "point not in interval of [ -180, 180 ] :: caused by :: { _id: 
+//ObjectId('5e55249695f4a1f2100959db'), desc: \"(181,0)\", punto: [ 181.0, 0.0 ] }",
+//	"code" : 13027,
+//	"codeName" : "Location13027"
+//}
+//P8b ¿Por qué? (una frase):
+//No, por que hay unas coordenadas mal puestas
+//P9a ¿Sé puede crear el índice para mejorar?(Sí/No):
+//Si
+//P9b Si la respuesta es sí, copiar la instrucción para crearlo. Si es no, escribir una frase explicando por qué.
+	db.plano.createIndex({punto:1,desc:1})
+//P10 Fragmento de código:
+db.lugares.aggregate([
+   {
+     $geoNear: {
+        near: { type: "Point", coordinates: [-3.7251149,40.4381963 ] },
+        distanceField: "dist.calculated",
+        query: { nombre: "Maria Zambrano"},
+	spherical: true
+     }
+   }
+])
